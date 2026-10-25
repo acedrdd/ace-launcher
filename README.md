@@ -1,2 +1,2 @@
 # ace-launcher
-Ace Launcher: a Minecraft Bedrock launcher for Android with built-in mod support and the Volt FPS optimizer for low-end devices.
+Ace Launcher: Ace Launcher is a lightweight launcher for Minecraft: Bedrock Edition on Android (arm64). It runs your own licensed copy of the game, loads .levipack native mods, and comes with the Volt FPS optimizer, which cuts lag and heat on low-end phones through a frame cap, chunk level of detail, entity culling and smoother chunk loading. It also has a dark neon theme, multiple game versions, and world and resource pack management. It's based on LeviLaunchroid (Apache-2.0). It is unofficial and not affiliated with Mojang or Microsoft, and you need to own Minecraft.
