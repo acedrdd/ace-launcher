@@ -10,7 +10,7 @@ jobs:
 
       - name: Unzip project
         run: |
-          unzip -q AceLauncher2.zip
+          unzip -oq AceLauncher2.zip
           rm -rf AceLauncher2/.github
 
       - name: Fetch native sources
