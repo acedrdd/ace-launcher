@@ -1,0 +1,56 @@
+name: Build Ace Launcher APK
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Unzip project
+        run: |
+          unzip -q AceLauncher2.zip
+          rm -rf AceLauncher2/.github
+
+      - name: Fetch native sources
+        working-directory: AceLauncher2/app/src/main/cpp
+        run: |
+          rm -rf preloader libHttpClient
+          git clone https://github.com/LiteLDev/preloader-android preloader
+          git -C preloader checkout 5d108da350ce3e7f13f51415f81e65344ecd5d14
+          git clone https://github.com/microsoft/libHttpClient libHttpClient
+          git -C libHttpClient checkout f8ae1d9cf931d9d55542865eee395adca5bdbe41
+          git -C libHttpClient submodule update --init --recursive --depth 1
+
+      - name: Firebase placeholder
+        working-directory: AceLauncher2
+        run: |
+          cat > app/google-services.json <<'JSON'
+          {"project_info":{"project_number":"000000000000","project_id":"ci-placeholder","storage_bucket":"ci-placeholder.appspot.com"},
+           "client":[{"client_info":{"mobilesdk_app_id":"1:000000000000:android:0000000000000000000000","android_client_info":{"package_name":"org.levimc.launcher"}},
+           "oauth_client":[],"api_key":[{"current_key":"AIzaSyCIOnlyPlaceholderKey"}],
+           "services":{"appinvite_service":{"other_platform_oauth_client":[]}}}],"configuration_version":"1"}
+          JSON
+
+      - uses: actions/setup-java@v4
+        with: { java-version: "21", distribution: temurin }
+      - uses: android-actions/setup-android@v3
+        with: { packages: platform-tools }
+      - run: yes | sdkmanager --licenses
+      - run: sdkmanager "build-tools;35.0.0"
+      - uses: xmake-io/github-action-setup-xmake@v1
+        with: { xmake-version: "2.9.9" }
+      - uses: nttld/setup-ndk@v1
+        with: { ndk-version: r28c, link-to-sdk: true }
+
+      - name: Build APK
+        working-directory: AceLauncher2
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AceLauncher-apk
+          path: AceLauncher2/app/build/outputs/apk/debug/AceLauncher-debug.apk
