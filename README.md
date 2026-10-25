@@ -1,3 +1,7 @@
+<p align="center"><img src="logo.png" width="140" alt="Ace Launcher logo"></p>
+
+<p align="center"><img src="social-preview.png" alt="Ace Launcher banner"></p>
+
 # Ace Launcher
 
 **A Minecraft: Bedrock Edition launcher for Android, with mod support and a built-in FPS optimizer for low-end devices.**
@@ -37,8 +41,6 @@ Ace Launcher lets you run your own licensed copy of Minecraft Bedrock, manage mu
 2. Open **Mods → Import** and choose `bundled-mods/Ace-Volt-2.3.2.levipack`.
 3. Switch Volt on and launch the game.
 4. Adjust Volt's options in the in-game mod menu.
-
-**Tips for weak phones:** use a frame cap of 30–60, turn on chunk level of detail and entity culling, and lower the game's render distance.
 
 ## Credits and legal
 
