@@ -12,6 +12,7 @@ jobs:
         run: |
           unzip -oq AceLauncher2.zip
           rm -rf AceLauncher2/.github
+          find AceLauncher2 -exec touch {} +
 
       - name: Fetch native sources
         working-directory: AceLauncher2/app/src/main/cpp
