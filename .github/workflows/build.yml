@@ -13,6 +13,8 @@ jobs:
           unzip -oq AceLauncher2.zip
           rm -rf AceLauncher2/.github
           find AceLauncher2 -exec touch {} +
+          echo "== identity found in the zip =="
+          grep -n 'applicationId\|versionName' AceLauncher2/app/build.gradle
 
       - name: Fetch native sources
         working-directory: AceLauncher2/app/src/main/cpp
@@ -57,7 +59,16 @@ jobs:
           chmod +x ./gradlew
           ./gradlew assembleDebug --no-daemon
 
+      - name: Verify APK identity
+        working-directory: AceLauncher2
+        run: |
+          APK=app/build/outputs/apk/debug/AceLauncher-debug.apk
+          $ANDROID_HOME/build-tools/35.0.0/aapt2 dump badging "$APK" | grep -E "^package:|^application-label:" | tee identity.txt
+          { echo '### APK identity'; echo '```'; cat identity.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          grep -q "name='com.ace.jakerolaunch'" identity.txt
+          grep -q "versionName='1.2'" identity.txt
+
       - uses: actions/upload-artifact@v4
         with:
-          name: AceLauncher-apk
+          name: AceLauncher-apk-run${{ github.run_number }}
           path: AceLauncher2/app/build/outputs/apk/debug/AceLauncher-debug.apk
