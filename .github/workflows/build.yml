@@ -29,8 +29,8 @@ jobs:
         run: |
           rm -rf zstd
           git clone --depth 1 --branch v1.5.7 https://github.com/facebook/zstd zstd
-          
-        - name: Firebase placeholder
+
+      - name: Firebase placeholder
         working-directory: AceLauncher2
         run: |
           cat > app/google-services.json <<'JSON'
