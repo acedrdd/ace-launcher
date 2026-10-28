@@ -38,7 +38,7 @@ Ace Launcher lets you run your own licensed copy of Minecraft Bedrock, manage mu
 
 ## Using Volt
 
-Volt installs automatically for Minecraft **1.26.52**:
+Volt installs automatically for Minecraft **26.60**:
 
 1. Create or select a 1.26.52 game version.
 2. Launch it. Volt is installed into that version's mods and switched on.
