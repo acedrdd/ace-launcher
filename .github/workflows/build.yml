@@ -2,6 +2,12 @@ name: Build Ace Launcher APK
 on:
   push:
   workflow_dispatch:
+env:
+  # Android applicationId to build. org.levimc.launcher is the original ID that the
+  # launcher's native helper accepts. Switch to com.ace.jakerolaunch only after that works.
+  APP_ID: org.levimc.launcher
+  # Version name baked into the APK (shown in Android App info).
+  VERSION_NAME: "1.2"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -35,9 +41,9 @@ jobs:
       - name: Firebase placeholder
         working-directory: AceLauncher2
         run: |
-          cat > app/google-services.json <<'JSON'
+          cat > app/google-services.json <<JSON
           {"project_info":{"project_number":"000000000000","project_id":"ci-placeholder","storage_bucket":"ci-placeholder.appspot.com"},
-           "client":[{"client_info":{"mobilesdk_app_id":"1:000000000000:android:0000000000000000000000","android_client_info":{"package_name":"com.ace.jakerolaunch"}},
+           "client":[{"client_info":{"mobilesdk_app_id":"1:000000000000:android:0000000000000000000000","android_client_info":{"package_name":"${APP_ID}"}},
            "oauth_client":[],"api_key":[{"current_key":"AIzaSyCIOnlyPlaceholderKey"}],
            "services":{"appinvite_service":{"other_platform_oauth_client":[]}}}],"configuration_version":"1"}
           JSON
@@ -57,7 +63,7 @@ jobs:
         working-directory: AceLauncher2
         run: |
           chmod +x ./gradlew
-          ./gradlew assembleDebug --no-daemon
+          ./gradlew assembleDebug --no-daemon -PaceApplicationId="$APP_ID" -PaceVersionName="$VERSION_NAME"
 
       - name: Verify APK identity
         working-directory: AceLauncher2
@@ -65,8 +71,8 @@ jobs:
           APK=app/build/outputs/apk/debug/AceLauncher-debug.apk
           $ANDROID_HOME/build-tools/35.0.0/aapt2 dump badging "$APK" | grep -E "^package:|^application-label:" | tee identity.txt
           { echo '### APK identity'; echo '```'; cat identity.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
-          grep -q "name='com.ace.jakerolaunch'" identity.txt
-          grep -q "versionName='1.2'" identity.txt
+          grep -q "name='$APP_ID'" identity.txt
+          grep -q "versionName='$VERSION_NAME'" identity.txt
 
       - uses: actions/upload-artifact@v4
         with:
